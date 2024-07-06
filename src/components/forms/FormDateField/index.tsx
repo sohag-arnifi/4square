@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Field, FieldProps } from "formik";
 import dayjs from "dayjs";
-import theme from "@/themes";
+import theme from "@/theme";
 // import theme from "../../../../../Theme";
 
 interface IDate {
@@ -38,10 +38,10 @@ const FormDateField: React.FC<IDate> = ({ name, label, inline }) => {
                 views={["day", "month", "year"]}
                 format="DD/MM/YYYY"
                 sx={{
-                  width: "100%",
+                  // width: "100%",
                   "& .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input": {
-                    height: "10px",
-                    fontSize: { xs: "14px", md: "16px" },
+                    height: "5px",
+                    fontSize: { xs: "14px", md: "14px" },
                     fontWeight: 500,
                     bgcolor: theme.colorConstants?.whitishGray,
                   },

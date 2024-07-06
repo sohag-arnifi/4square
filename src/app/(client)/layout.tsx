@@ -116,7 +116,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <TopNav setOpen={setOpen} open={open} />
         </Box>
 
-        <Box zIndex={5} marginTop={"100px"} sx={{ overflow: "hidden" }}>
+        <Box
+          zIndex={5}
+          marginTop={{ xs: "70px", md: "100px" }}
+          sx={{ overflow: "hidden" }}
+        >
           <Suspense fallback={<LinearProgress />}>{children}</Suspense>
         </Box>
       </Box>

@@ -30,3 +30,25 @@ model User {
 
   @@map("users")
 }
+
+model Company {
+  id               String  @id @default(uuid())
+  companyName      String  @unique @db.VarChar(255)
+  address          String
+  email            String
+  phone            String
+  startDate        String
+  emergencyContact String?
+  license          String?
+  binNumber        String?
+
+  totalInvest Float?
+  totalProfit Float?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company")
+}
