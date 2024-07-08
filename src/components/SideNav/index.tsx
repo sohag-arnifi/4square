@@ -55,7 +55,7 @@ const SideNav: React.FC<IProps> = ({ navigateItems, setOpen }) => {
             color: "white",
           }}
         >
-          ClearLedger
+          4Square
         </Typography>
 
         <IconButton

@@ -26,7 +26,7 @@ export const GET = catchAsync(
   async (req: CustomRequest, res: Response): Promise<NextResponse> => {
     const user = req.user;
 
-    if (!user?.id) {
+    if (!user?._id) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
         "You are not permitted to perform this action"

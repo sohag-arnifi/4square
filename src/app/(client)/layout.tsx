@@ -8,6 +8,7 @@ import {
   BarChart,
   Business,
   Description,
+  Diversity3,
   Groups2,
   Settings,
 } from "@mui/icons-material";
@@ -27,6 +28,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       label: "All Clients",
       path: "/clients",
       icon: <Groups2 />,
+    },
+    {
+      label: "All Investors",
+      path: "/investor",
+      icon: <Diversity3 />,
     },
     {
       label: "Sales",

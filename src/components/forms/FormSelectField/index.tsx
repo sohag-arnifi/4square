@@ -1,4 +1,4 @@
-import theme from "@/themes";
+import theme from "@/theme";
 import {
   Box,
   MenuItem,

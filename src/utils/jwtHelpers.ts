@@ -3,9 +3,9 @@ import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 // import envconfig from "../config/envconfig";
 
 const createToken = (user: JwtPayload, expiresIn: string): string => {
-  const { id, username, email, role } = user;
+  const { _id, username, email, role } = user;
 
-  const payload = { id, username, email, role };
+  const payload = { _id, username, email, role };
 
   return jwt.sign(payload, envConfig.secrect_token_key as Secret, {
     expiresIn,

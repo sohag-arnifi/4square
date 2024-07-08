@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 
 export const metadata = {
-  title: "ClearLedger | Login",
+  title: "4Square | Login",
   description: "Login page",
 };
 

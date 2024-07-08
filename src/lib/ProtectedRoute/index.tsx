@@ -18,7 +18,7 @@ export default function ProtectedRouteHOC<P extends object>(
       return <GlobalLoader height="100vh" />;
     }
 
-    if (!loginUser?.isActive || !loginUser?.id) {
+    if (!loginUser?.isActive || !loginUser?._id) {
       router.replace("/login");
       return null;
     }

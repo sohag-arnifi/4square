@@ -39,7 +39,7 @@ const CompanySetup = () => {
   const { data, isLoading: initialLoading } = useGetCompanyInfoQuery({});
 
   if (initialLoading) {
-    return <GlobalLoader height="100vh" />;
+    return <GlobalLoader height="70vh" />;
   }
 
   const initialValues = {
@@ -81,7 +81,6 @@ const CompanySetup = () => {
           })
         );
       }
-      console.log(response);
     } catch (error) {
       console.error(error);
       dispatch(

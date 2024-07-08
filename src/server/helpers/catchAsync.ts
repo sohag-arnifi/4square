@@ -1,10 +1,11 @@
 import { cookies } from "next/headers";
 import errorHandler from "../ErrorHandelars";
-import { User } from "@prisma/client";
 import userControllers from "../controllers/user";
+import dbConnection from "@/lib/dbConnect";
+import { IUser } from "@/models/user";
 
 export interface CustomRequest extends Request {
-  user?: Partial<User>;
+  user?: Partial<IUser>;
 }
 
 const catchAsync =
@@ -14,6 +15,8 @@ const catchAsync =
     const methode = req.method;
     const pathName = req?.url.split("/api")[1];
 
+    await dbConnection();
+
     try {
       if (pathName === "/auth" && methode === "POST") {
         return await handler(req, res);
@@ -22,7 +25,7 @@ const catchAsync =
           tokenInfo as string
         );
 
-        if (userInfo?.id) {
+        if (userInfo?._id) {
           (req as CustomRequest).user = userInfo;
         } else {
           (req as CustomRequest).user = {};

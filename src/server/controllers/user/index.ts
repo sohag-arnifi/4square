@@ -1,16 +1,11 @@
 import httpStatus from "http-status";
 import { hashedPassword } from "@/utils/hashedPassword";
-import prisma from "@/server/prisma";
 import ApiError from "@/server/ErrorHandelars/ApiError";
-import { User } from "@prisma/client";
 import { jwtHelpers } from "@/utils/jwtHelpers";
+import User, { IUser } from "@/models/user";
 
-const create = async (data: User) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      username: data?.username,
-    },
-  });
+const create = async (data: IUser) => {
+  const user = await User.findOne({ username: data?.username });
 
   if (user) {
     throw new ApiError(httpStatus.BAD_REQUEST, "User already exists");
@@ -19,7 +14,7 @@ const create = async (data: User) => {
   const userPassword = await hashedPassword.createhas(data?.password);
   data.password = userPassword;
 
-  const { password, ...response } = await prisma.user.create({ data });
+  const { password, ...response } = await User.create(data);
 
   return {
     user: response,
@@ -29,11 +24,7 @@ const create = async (data: User) => {
 export const login = async (data: { username: string; password: string }) => {
   const { username, password } = data;
 
-  const user = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-  });
+  const user = await (await User.findOne({ username }))?.toObject();
 
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "User not found");
@@ -74,7 +65,7 @@ const getLoginUser = async (token: string) => {
     );
   }
   const tokenInfo = jwtHelpers.verifyToken(token);
-  const user = await getUserById(tokenInfo.id);
+  const user = await getUserById(tokenInfo._id);
 
   if (!user) {
     throw new ApiError(
@@ -86,11 +77,7 @@ const getLoginUser = async (token: string) => {
 };
 
 const getUserById = async (id: string) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
+  const user = await (await User.findById(id))?.toObject();
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
@@ -101,46 +88,20 @@ const getUserById = async (id: string) => {
 };
 
 const findAll = async () => {
-  const response = await prisma.user.findMany({
-    orderBy: {
-      createdAt: "asc",
-    },
-    select: {
-      id: true,
-      username: true,
-      email: true,
-      role: true,
-      fullName: true,
-      phone: true,
-      isActive: true,
-      lastVisit: true,
-
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
+  const response = await User.find();
   return response;
 };
 
 const deleteOne = async (id: string) => {
-  const res = await prisma.user.delete({
-    where: {
-      id,
-    },
-  });
-
-  return res;
+  const response = await (await User.findByIdAndDelete(id))?.toObject();
+  return response;
 };
 
-const updateOne = async (data: User, id: string) => {
-  const res = await prisma.user.update({
-    where: {
-      id,
-    },
-    data,
-  });
-
-  return res;
+const updateOne = async (data: Partial<IUser>, id: string) => {
+  const response = await (
+    await User.findByIdAndUpdate(id, data, { new: true })
+  )?.toObject();
+  return response;
 };
 
 const userControllers = {
