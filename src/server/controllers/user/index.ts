@@ -45,7 +45,7 @@ export const login = async (data: { username: string; password: string }) => {
 
   await userControllers.updateOne(
     { ...user, lastVisit: new Date(Date.now()) },
-    user?.id
+    user?._id as string
   );
 
   const token = jwtHelpers.createToken(user, "24H");
@@ -88,7 +88,7 @@ const getUserById = async (id: string) => {
 };
 
 const findAll = async () => {
-  const response = await User.find();
+  const response = await User.find().select("-password");
   return response;
 };
 
@@ -98,6 +98,11 @@ const deleteOne = async (id: string) => {
 };
 
 const updateOne = async (data: Partial<IUser>, id: string) => {
+  if (data?.password) {
+    const userPassword = await hashedPassword.createhas(data?.password);
+    data.password = userPassword;
+  }
+
   const response = await (
     await User.findByIdAndUpdate(id, data, { new: true })
   )?.toObject();

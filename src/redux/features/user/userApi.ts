@@ -4,15 +4,16 @@ const userApi = baseApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createNewUser: builder.mutation({
       query: (data) => ({
-        url: "/user",
+        url: "/auth/create",
         method: "POST",
         body: data,
       }),
       invalidatesTags: ["user"],
     }),
+
     getAllUsers: builder.query({
       query: () => ({
-        url: "/user",
+        url: "/users",
         method: "GET",
       }),
       providesTags: ["user"],
@@ -20,7 +21,7 @@ const userApi = baseApiSlice.injectEndpoints({
 
     deleteUser: builder.mutation({
       query: (data) => ({
-        url: "/user",
+        url: "/users",
         method: "DELETE",
         body: data,
       }),
@@ -29,7 +30,7 @@ const userApi = baseApiSlice.injectEndpoints({
 
     updateUser: builder.mutation({
       query: (data) => ({
-        url: "/user",
+        url: "/users",
         method: "PATCH",
         body: data,
       }),

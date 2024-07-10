@@ -3,6 +3,7 @@ import errorHandler from "../ErrorHandelars";
 import userControllers from "../controllers/user";
 import dbConnection from "@/lib/dbConnect";
 import { IUser } from "@/models/user";
+import ApiError from "../ErrorHandelars/ApiError";
 
 export interface CustomRequest extends Request {
   user?: Partial<IUser>;
@@ -28,7 +29,8 @@ const catchAsync =
         if (userInfo?._id) {
           (req as CustomRequest).user = userInfo;
         } else {
-          (req as CustomRequest).user = {};
+          throw new ApiError(401, "Unauthorized");
+          // (req as CustomRequest).user = {};
         }
         return await handler(req, res);
       }

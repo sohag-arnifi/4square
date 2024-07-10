@@ -5,6 +5,7 @@ import TopNav from "@/components/TopNav";
 import { Box, Drawer, LinearProgress } from "@mui/material";
 import React, { Suspense, useState } from "react";
 import {
+  AssuredWorkload,
   BarChart,
   Business,
   Description,
@@ -32,7 +33,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     {
       label: "All Investors",
       path: "/investor",
-      icon: <Diversity3 />,
+      icon: <AssuredWorkload />,
     },
     {
       label: "Sales",
@@ -78,16 +79,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           path: "/settings/company-setup",
         },
         {
-          label: "User Accounts Setup",
-          path: "/settings/user-accounts-setup",
-        },
-        {
-          label: "Access Setup",
-          path: "/settings/access-setup",
-        },
-        {
-          label: "Fiscal Years",
-          path: "/settings/fiscal-years",
+          label: "User Accounts",
+          path: "/settings/user-accounts",
         },
       ],
     },

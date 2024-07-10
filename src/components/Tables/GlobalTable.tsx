@@ -1,3 +1,4 @@
+import { IUser } from "@/models/user";
 import theme from "@/theme";
 import { Clear, DriveFileRenameOutline } from "@mui/icons-material";
 import {
@@ -39,12 +40,14 @@ interface IProps {
   tableItems: { [key: string]: string }[];
   deleteHandler?: (username: string) => void;
   updateHandler?: (username: string) => void;
+  loginUser?: IUser;
 }
 const GlobalTable: React.FC<IProps> = ({
   tableHeaders,
   tableItems,
   deleteHandler,
   updateHandler,
+  loginUser,
 }) => {
   return (
     <TableContainer
@@ -63,7 +66,7 @@ const GlobalTable: React.FC<IProps> = ({
                   sx={{
                     bgcolor: theme.colorConstants.black,
                     color: theme.colorConstants.whitishGray,
-                    fontSize: { xs: "12px", md: "16px" },
+                    fontSize: { xs: "12px", md: "14px" },
                     fontWeight: 600,
                     minWidth: item?.width,
                   }}
@@ -105,6 +108,11 @@ const GlobalTable: React.FC<IProps> = ({
                   <Stack direction="row" spacing={1} justifyContent="center">
                     {updateHandler && (
                       <IconButton
+                        disabled={
+                          loginUser?.role !== "super_admin" &&
+                          loginUser?.role !== "admin" &&
+                          loginUser?._id !== item?._id
+                        }
                         onClick={() => updateHandler(item?._id as string)}
                         color="primary"
                       >
@@ -113,6 +121,10 @@ const GlobalTable: React.FC<IProps> = ({
                     )}
                     {deleteHandler && (
                       <IconButton
+                        disabled={
+                          loginUser?.role !== "super_admin" &&
+                          loginUser?.role !== "admin"
+                        }
                         onClick={() => deleteHandler(item?._id as string)}
                         color="error"
                       >

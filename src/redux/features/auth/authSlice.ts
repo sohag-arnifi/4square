@@ -1,8 +1,8 @@
-import { User } from "@prisma/client";
+import { IUser } from "@/models/user";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: {} as User,
+  user: {} as IUser,
 };
 
 const authSlice = createSlice({

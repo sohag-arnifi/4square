@@ -25,7 +25,7 @@ const ClientCountCard: React.FC<{
         variant="h3"
         sx={{
           fontWeight: 600,
-          fontSize: "40px",
+          fontSize: { xs: "28px", md: "40px" },
         }}
       >
         {count ?? "00"}
@@ -35,7 +35,7 @@ const ClientCountCard: React.FC<{
         variant="h3"
         sx={{
           fontWeight: 600,
-          fontSize: "16px",
+          fontSize: { xs: "14px", md: "16px" },
           fontColor: theme.colorConstants.mediumGray,
         }}
       >

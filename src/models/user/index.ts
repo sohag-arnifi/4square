@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema, model } from "mongoose";
+import { ObjectId } from "mongoose";
 
 // Define the role enum
 export const IRole = {
@@ -9,9 +10,10 @@ export const IRole = {
 
 // Define the TypeScript interface
 export interface IUser extends Document {
+  _id: ObjectId | string;
   username: string;
   password: string;
-  role: keyof typeof IRole;
+  role: keyof typeof IRole | "admin" | "super_admin" | "user";
   name?: string;
   email?: string;
   phone?: string;
