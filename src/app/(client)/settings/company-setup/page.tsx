@@ -37,6 +37,8 @@ const CompanySetup = () => {
     useUpdateCompanyMutation();
 
   const { data, isLoading: initialLoading } = useGetCompanyInfoQuery({});
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   if (initialLoading) {
     return <GlobalLoader height="70vh" />;
@@ -53,9 +55,6 @@ const CompanySetup = () => {
     license: data?.data?.license || "",
     binNumber: data?.data?.binNumber || "",
   };
-
-  const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const onSubmit = async (values: FormikValues) => {
     let response;
@@ -101,6 +100,8 @@ const CompanySetup = () => {
           sx={{
             borderRadius: { xs: "6px", md: "10px" },
             padding: { xs: "20px", md: "50px" },
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+            bgcolor: "#f9f9f9",
           }}
         >
           <FormProvaider
