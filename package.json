@@ -13,10 +13,6 @@
     "dev:prod": "dotenv -e .env.prod next dev",
     "build:prod": "dotenv -e .env.prod next build",
     "start:prod": "dotenv -e .env.prod next start",
-    "migrate:local": "dotenv -e .env.dev -- npx prisma migrate dev",
-    "migrate:prod": "dotenv -e .env.prod -- npx prisma migrate deploy",
-    "generate:local": "dotenv -e .env.dev -- npx prisma generate",
-    "generate:prod": "dotenv -e .env.prod -- npx prisma generate",
     "postinstall": "prisma generate"
   },
   "dependencies": {
