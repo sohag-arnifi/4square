@@ -81,7 +81,7 @@ const LoginPage = () => {
               color: theme.colorConstants.darkBlue,
             }}
           >
-            ClearLeder
+            4Square Cable
           </Typography>
 
           <Typography
