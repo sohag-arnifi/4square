@@ -1,9 +1,7 @@
-import { Prisma } from "@prisma/client";
+import { MongooseError } from "mongoose";
 import { IGenericErrorResponse } from ".";
 
-const handleValidationError = (
-  error: Prisma.PrismaClientValidationError
-): IGenericErrorResponse => {
+const handleValidationError = (error: MongooseError): IGenericErrorResponse => {
   const errors = [
     {
       path: "",

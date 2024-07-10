@@ -1,9 +1,9 @@
 import envConfig from "@/configs/envConfig";
 import { NextResponse } from "next/server";
 import ApiError from "./ApiError";
-import { Prisma } from "@prisma/client";
 import handleValidationError from "./handleValidationError";
 import handleClientError from "./handleClientError";
+import { MongooseError } from "mongoose";
 
 export interface IGenericErrorMessage {
   path: string | number;
@@ -24,12 +24,12 @@ const errorHandler = (error: Error) => {
   let message = "Something went wrong !";
   let errorMessages: IGenericErrorMessage[] = [];
 
-  if (error instanceof Prisma.PrismaClientValidationError) {
+  if (error instanceof MongooseError) {
     const simplifiedError = handleValidationError(error);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorMessages = simplifiedError.errorMessages;
-  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  } else if (error instanceof MongooseError) {
     const simplifiedError = handleClientError(error);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;

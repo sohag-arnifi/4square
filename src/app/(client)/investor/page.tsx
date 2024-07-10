@@ -17,14 +17,13 @@ import {
 import { snackbarSliceActions } from "@/redux/features/snackBar/snackBarSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { Box, Stack } from "@mui/material";
-import { Investor } from "@prisma/client";
 import { FormikValues } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const ClientsListing = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
-  const [investorInfo, setInvestorInfo] = useState<Partial<Investor>>({});
+  const [investorInfo, setInvestorInfo] = useState<Partial<IInvestor>>({});
 
   const dispatch = useAppDispatch();
   const router = useRouter();
