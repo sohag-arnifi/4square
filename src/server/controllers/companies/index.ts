@@ -1,28 +1,31 @@
-// const create = async (data: Company) => {
-//   const response = await prisma.company.create({ data });
-//   return response;
-// };
+import Company, { ICompany } from "@/models/company";
 
-// const update = async (data: Company) => {
-//   const id = data?.id;
-//   const response = await prisma.company.update({
-//     where: {
-//       id,
-//     },
-//     data,
-//   });
-//   return response;
-// };
+const create = async (data: ICompany) => {
+  const response = await (await Company.create(data))?.toObject();
+  return response;
+};
 
-// const getOne = async () => {
-//   const response = await prisma.company.findFirst();
-//   return response;
-// };
+const update = async (data: ICompany) => {
+  const _id = data?._id;
 
-// const companiesControllers = {
-//   create,
-//   update,
-//   getOne,
-// };
+  const response = await (
+    await Company.findOneAndUpdate({ _id }, data, {
+      new: true,
+    })
+  )?.toObject();
 
-// export default companiesControllers;
+  return response;
+};
+
+const getOne = async () => {
+  const response = await (await Company.findOne({}))?.toObject();
+  return response;
+};
+
+const companiesControllers = {
+  create,
+  update,
+  getOne,
+};
+
+export default companiesControllers;

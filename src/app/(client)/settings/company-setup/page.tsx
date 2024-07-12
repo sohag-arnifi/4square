@@ -45,7 +45,7 @@ const CompanySetup = () => {
   }
 
   const initialValues = {
-    id: data?.data.id || null,
+    _id: data?.data?._id || null,
     companyName: data?.data?.companyName || "",
     address: data?.data?.address || "",
     email: data?.data?.email || "",
@@ -59,7 +59,7 @@ const CompanySetup = () => {
   const onSubmit = async (values: FormikValues) => {
     let response;
     try {
-      if (!values?.id) {
+      if (!values?._id) {
         response = await createCompany(values).unwrap();
       } else {
         response = await updateCompany(values).unwrap();
@@ -183,11 +183,20 @@ const CompanySetup = () => {
                   color="error"
                   title="Back"
                 />
-                <GlobalButton
-                  type="submit"
-                  isLoading={createLoading || updateLoading}
-                  title="Update"
-                />
+
+                {data?.data?._id ? (
+                  <GlobalButton
+                    type="submit"
+                    isLoading={createLoading || updateLoading}
+                    title="Update"
+                  />
+                ) : (
+                  <GlobalButton
+                    type="submit"
+                    isLoading={createLoading || updateLoading}
+                    title="Create"
+                  />
+                )}
               </Stack>
             </Box>
           </FormProvaider>
