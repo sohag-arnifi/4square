@@ -14,7 +14,7 @@ const create = async (data: IUser) => {
   const userPassword = await hashedPassword.createhas(data?.password);
   data.password = userPassword;
 
-  const { password, ...response } = await User.create(data);
+  const { password, ...response } = await (await User.create(data)).toObject();
 
   return {
     user: response,

@@ -19,7 +19,10 @@ const catchAsync =
     await dbConnection();
 
     try {
-      if (pathName === "/auth" && methode === "POST") {
+      if (
+        (pathName === "/auth" || pathName === "/auth/create") &&
+        methode === "POST"
+      ) {
         return await handler(req, res);
       } else {
         const userInfo = await userControllers?.getLoginUser(
