@@ -15,15 +15,17 @@ import {
   useUpdateInvestorMutation,
 } from "@/redux/features/investor/investorApi";
 import { snackbarSliceActions } from "@/redux/features/snackBar/snackBarSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Box, Stack } from "@mui/material";
 import { FormikValues } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const ClientsListing = () => {
+const InvestorsListing = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
   const [investorInfo, setInvestorInfo] = useState<Partial<IInvestor>>({});
+
+  const loginUser = useAppSelector((state) => state?.auth?.user);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -54,22 +56,22 @@ const ClientsListing = () => {
     {
       label: "Invest",
       align: "left",
-      width: "150px",
+      width: "100px",
     },
     {
       label: "Profite",
       align: "left",
-      width: "150px",
+      width: "100px",
     },
     {
       label: "Status",
       align: "left",
-      width: "150px",
+      width: "100px",
     },
     {
       label: "Actions",
       align: "center",
-      width: "150px",
+      width: "100px",
     },
   ];
 
@@ -173,6 +175,7 @@ const ClientsListing = () => {
           tableItems={tableItems}
           deleteHandler={() => {}}
           updateHandler={updateHandler}
+          loginUser={loginUser}
         />
       </Box>
 
@@ -270,4 +273,4 @@ const ClientsListing = () => {
   );
 };
 
-export default ClientsListing;
+export default InvestorsListing;
