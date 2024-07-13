@@ -61,8 +61,8 @@ export const PATCH = catchAsync(
     const data = await req.json();
 
     if (
-      (!user?.username && user?.role !== IRole.SUPER_ADMIN) ||
-      user?.role !== IRole.ADMIN
+      !user?.username &&
+      (user?.role !== IRole.SUPER_ADMIN || user?.role !== IRole.ADMIN)
     ) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
