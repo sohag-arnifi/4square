@@ -60,9 +60,9 @@ const ClientsListing = () => {
   const { data, isLoading: initialLoading } = useGetAllClientsQuery({});
 
   const updateHandler = (id: string) => {
-    // const selected = data?.data?.find((item: User) => item?.id === id);
-    // setClientInfo(selected);
-    // setIsOpenDrawer(true);
+    const selected = data?.data?.find((item: IClient) => item?._id === id);
+    setClientInfo(selected);
+    setIsOpenDrawer(true);
   };
 
   const submitHandler = async (values: FormikValues) => {
@@ -381,7 +381,7 @@ const ClientsListing = () => {
       </Box>
 
       <GlobalDrawer
-        title={clientInfo?.id ? "Update Invester info" : "Create new Invester"}
+        title={clientInfo?._id ? "Update Client info" : "Create new Client"}
         open={isOpenDrawer}
         setOpen={setIsOpenDrawer}
       >

@@ -2,7 +2,7 @@ import mongoose, { ObjectId, model } from "mongoose";
 import { Document, Model, Schema } from "mongoose";
 
 export interface IClient extends Document {
-  _id: ObjectId;
+  _id: ObjectId | string;
   name: string;
   phone: string;
   email: string;
