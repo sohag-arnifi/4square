@@ -2,12 +2,22 @@
 
 import GlobalLoader from "@/components/GlobalLoader";
 import PageHeader from "@/components/PageHeader";
+import FormProvaider from "@/components/forms";
+import FormRadioField from "@/components/forms/FormRadioField";
 import { IClient } from "@/models/client";
 import { useGetAllClientsQuery } from "@/redux/features/clients/clientApi";
 import theme from "@/theme";
 import { Person2, Router } from "@mui/icons-material";
+
 import { Box, Grid, Paper, Typography } from "@mui/material";
+import { FormikValues } from "formik";
 import React from "react";
+import PaymentCard from "./_components/PaymentCard";
+
+export interface IPayment {
+  isActivedNeeded: string;
+  paymentMethod: string;
+}
 
 const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { data, isLoading } = useGetAllClientsQuery({});
@@ -19,9 +29,6 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
   const selectedClient: IClient = data?.data?.find(
     (item: IClient) => item?._id === params?.id
   );
-
-  console.log(isLoading);
-  console.log(selectedClient);
 
   const clientDetailsInfo = {
     "Active Packege": selectedClient?.servicePackege,
@@ -39,7 +46,15 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
       )
     : 0;
 
-  console.log(expiryInDays);
+  const initialValues = {
+    isActivedNeeded: "No",
+    paymentMethod: "",
+  };
+
+  const paymentHandlar = (values: FormikValues) => {
+    console.log("payment", values);
+  };
+
   return (
     <Box>
       <PageHeader title="Client Details" />
@@ -106,7 +121,7 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                         width: "130px",
                       }}
                     >
-                      {key}:
+                      {key}
                     </Typography>
                     <Typography
                       variant="body1"
@@ -115,6 +130,7 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                         fontWeight: "bold",
                       }}
                     >
+                      :{" "}
                       {clientDetailsInfo[key as keyof typeof clientDetailsInfo]}
                     </Typography>
                   </Box>
@@ -173,7 +189,7 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     width: "130px",
                   }}
                 >
-                  Status:
+                  Status
                 </Typography>
                 <Typography
                   variant="body1"
@@ -185,12 +201,12 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                       : theme.colorConstants?.crossRed,
                   }}
                 >
-                  {selectedClient?.isActive ? "Active" : "Disabled"}
+                  : {selectedClient?.isActive ? "Active" : "Disabled"}
                 </Typography>
               </Box>
 
               <Box
-                paddingTop="10px"
+                paddingTop="5px"
                 sx={{
                   display: "flex",
                 }}
@@ -211,6 +227,7 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     fontWeight: "bold",
                   }}
                 >
+                  :{" "}
                   {new Intl.DateTimeFormat("en-GB", {
                     day: "2-digit",
                     month: "long",
@@ -221,7 +238,7 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
 
               {expiryInDays > 0 && (
                 <Box
-                  paddingTop="10px"
+                  paddingTop="5px"
                   sx={{
                     display: "flex",
                   }}
@@ -242,11 +259,31 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                       fontWeight: "bold",
                     }}
                   >
-                    {expiryInDays}{" "}
+                    : {expiryInDays}{" "}
                     {expiryInDays > 1 ? "days left." : "day left."}
                   </Typography>
                 </Box>
               )}
+
+              <Box marginTop="16px">
+                <FormProvaider
+                  submitHandlar={paymentHandlar}
+                  initialValues={initialValues}
+                >
+                  <Box>
+                    <FormRadioField
+                      name={"isActivedNeeded"}
+                      label={"Do you want to activate this account?"}
+                      options={[
+                        { label: "Yes", value: "Yes" },
+                        { label: "No", value: "No" },
+                      ]}
+                    />
+                  </Box>
+
+                  <PaymentCard />
+                </FormProvaider>
+              </Box>
             </Paper>
           </Grid>
         </Grid>

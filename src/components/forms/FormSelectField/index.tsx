@@ -34,7 +34,12 @@ const FormSelectField: React.FC<ISelect> = ({
   inline,
 }) => {
   return (
-    <Box maxWidth={"500px"}>
+    <Box
+      maxWidth={"500px"}
+      display={"flex"}
+      alignItems={"center"}
+      flexDirection={{ xs: "column", md: inline ?? false ? "row" : "column" }}
+    >
       <Typography
         variant="body1"
         marginBottom={inline ?? false ? "0px" : "10px"}

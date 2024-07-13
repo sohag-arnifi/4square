@@ -509,12 +509,12 @@ const ClientsListing = () => {
               name="servicePackege"
               label="Package"
               options={[
-                { label: "10MBS", value: "10MBS" },
-                { label: "15MBS", value: "15MBS" },
-                { label: "20MBS", value: "20MBS" },
-                { label: "25MBS", value: "25MBS" },
-                { label: "30MBS", value: "30MBS" },
-                { label: "40MBS", value: "40MBS" },
+                { label: "10Mbps", value: "10Mbps" },
+                { label: "15Mbps", value: "15Mbps" },
+                { label: "20Mbps", value: "20Mbps" },
+                { label: "25Mbps", value: "25Mbps" },
+                { label: "30Mbps", value: "30Mbps" },
+                { label: "40Mbps", value: "40Mbps" },
               ]}
               placeholder="Select One"
               required

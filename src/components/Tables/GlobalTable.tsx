@@ -126,17 +126,19 @@ const GlobalTable: React.FC<IProps> = ({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               ?.map((item, index) => (
                 <StyledTableRow
-                  onClick={() => navigateHandler(item?._id)}
                   isDeactive={item?.status === "Deactive"}
                   key={index}
-                  sx={{
-                    cursor: "pointer",
-                  }}
                 >
                   {Object.keys(item).map((key, index) => {
                     return (
                       key !== "_id" && (
-                        <StyledTableCell key={index}>
+                        <StyledTableCell
+                          onClick={() => navigateHandler(item?._id)}
+                          key={index}
+                          sx={{
+                            cursor: "pointer",
+                          }}
+                        >
                           {item[key as keyof typeof item]}
                         </StyledTableCell>
                       )
