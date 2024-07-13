@@ -237,10 +237,18 @@ const ClientsListing = () => {
             paddingY: "10px",
             display: "flex",
             justifyContent: "space-between",
-            alignContent: "center",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "start", md: "center" },
           }}
         >
-          <Typography variant="h4">
+          <Typography
+            variant="h4"
+            sx={{
+              xs: "18px",
+              md: "24px",
+              pb: { xs: "16px", md: "0px" },
+            }}
+          >
             Total Result -{" "}
             <span
               style={{
@@ -330,7 +338,7 @@ const ClientsListing = () => {
                 ),
               }}
               sx={{
-                width: "350px",
+                width: { xs: "100%", md: "350px" },
                 bgcolor: "white",
                 fontSize: "14px",
                 fontWeight: 500,
