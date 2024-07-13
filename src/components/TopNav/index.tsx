@@ -207,33 +207,6 @@ const TopNav: React.FC<HeaderProps> = ({ setOpen, open }) => {
               sx={{ width: 30, height: 30 }}
               onClick={(e) => setAnchorEl(e.currentTarget)}
             />
-
-            {/* <Box>
-              <Typography
-                variant="h6"
-                noWrap
-                sx={{ ml: "10px", fontWeight: 400, color: "#757575" }}
-              >
-                {user?.role === "super_admin" ? "Super Admin" : "Admin"}
-              </Typography>
-              <Button
-                aria-haspopup="true"
-                aria-expanded={true}
-                variant="text"
-                disableElevation
-                onClick={(e) => setAnchorEl(e.currentTarget)}
-                endIcon={<KeyboardArrowDown />}
-                sx={{
-                  color: theme.colorConstants.darkBlue,
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  textTransform: "none",
-                  height: "20px",
-                }}
-              >
-                {user?.username}
-              </Button>
-            </Box> */}
           </Box>
         </Stack>
       </Stack>

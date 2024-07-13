@@ -3,6 +3,7 @@
 import GlobalButton from "@/components/Buttons/GlobalButton";
 import GlobalDrawer from "@/components/Drawers/GlobalDrawer";
 import GlobalLoader from "@/components/GlobalLoader";
+import GlobalModal from "@/components/Modals/GlobalModal";
 import PageHeader from "@/components/PageHeader";
 import GlobalTable from "@/components/Tables/GlobalTable";
 import FormProvaider from "@/components/forms";
@@ -11,13 +12,14 @@ import FormSelectField from "@/components/forms/FormSelectField";
 import { IClient } from "@/models/client";
 import {
   useCreateClientMutation,
+  useDeleteClientMutation,
   useGetAllClientsQuery,
   useUpdateClientMutation,
 } from "@/redux/features/clients/clientApi";
 import { snackbarSliceActions } from "@/redux/features/snackBar/snackBarSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import theme from "@/theme";
-import { Search } from "@mui/icons-material";
+import { ErrorOutline, Search } from "@mui/icons-material";
 import {
   Box,
   InputAdornment,
@@ -42,6 +44,7 @@ const formatDate = (isoString: Date): string => {
 
 const ClientsListing = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
   const [clientInfo, setClientInfo] = useState<Partial<IClient>>({});
 
   const [renderClientsStatus, setRenderClientsStatus] = useState<string>("all");
@@ -56,6 +59,9 @@ const ClientsListing = () => {
     useCreateClientMutation();
   const [updateClient, { isLoading: updateLoading }] =
     useUpdateClientMutation();
+
+  const [deleteClient, { isLoading: deleteLoading }] =
+    useDeleteClientMutation();
 
   const { data, isLoading: initialLoading } = useGetAllClientsQuery({});
 
@@ -101,38 +107,42 @@ const ClientsListing = () => {
     }
   };
 
+  const openDeleteModal = (id: string) => {
+    const selected = data?.data?.find((item: IClient) => item?._id === id);
+    setClientInfo(selected);
+    setIsOpenDeleteModal(true);
+  };
+
   const deleteUserHandler = async () => {
-    // try {
-    //   const res = await deleteUser({
-    //     id: clientInfo?.id,
-    //     role: clientInfo?.role,
-    //   }).unwrap();
-    //   if (res.success) {
-    //     dispatch(
-    //       snackbarSliceActions.open({
-    //         type: "success",
-    //         message: res?.message,
-    //       })
-    //     );
-    //     setIsOpenModal(false);
-    //     setClientInfo({});
-    //   } else {
-    //     dispatch(
-    //       snackbarSliceActions.open({
-    //         type: "error",
-    //         message: res.message || "Something went wrong",
-    //       })
-    //     );
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   dispatch(
-    //     snackbarSliceActions.open({
-    //       type: "error",
-    //       message: "Something went wrong",
-    //     })
-    //   );
-    // }
+    console.log("delete");
+    try {
+      const res = await deleteClient(clientInfo).unwrap();
+      if (res.success) {
+        dispatch(
+          snackbarSliceActions.open({
+            type: "success",
+            message: res?.message,
+          })
+        );
+        setIsOpenDeleteModal(false);
+        setClientInfo({});
+      } else {
+        dispatch(
+          snackbarSliceActions.open({
+            type: "error",
+            message: res.message || "Something went wrong",
+          })
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        snackbarSliceActions.open({
+          type: "error",
+          message: "Something went wrong",
+        })
+      );
+    }
   };
 
   if (initialLoading) {
@@ -226,6 +236,49 @@ const ClientsListing = () => {
       status: item.isActive ? "Active" : "Deactive",
     };
   });
+
+  const modalInfo = (
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
+      <ErrorOutline
+        color="error"
+        sx={{ fontSize: { xs: "50px", md: "100px" } }}
+      />
+      <Typography
+        variant="h3"
+        sx={{
+          color: theme.colorConstants.crossRed,
+          fontSize: { xs: "16px", md: "24px" },
+          paddingTop: { xs: "10px", md: "20px" },
+          lineHeight: { xs: "18px", md: "24px" },
+        }}
+      >
+        Are you sure delete this client?
+      </Typography>
+
+      <Typography
+        variant="body1"
+        sx={{
+          color: theme.colorConstants.darkBlue,
+          textAlign: "center",
+          fontSize: { xs: "12px", md: "16px" },
+          lineHeight: { xs: "14px", md: "20px" },
+          marginTop: "10px",
+        }}
+      >
+        If you click on the <b>Yes</b> button, this client will be permanently
+        deleted.
+      </Typography>
+    </Box>
+  );
 
   return (
     <Box>
@@ -355,7 +408,7 @@ const ClientsListing = () => {
         <GlobalTable
           tableHeaders={tableHeaders}
           tableItems={tableItems}
-          deleteHandler={() => {}}
+          deleteHandler={openDeleteModal}
           updateHandler={updateHandler}
           loginUser={loginUser}
         />
@@ -372,6 +425,7 @@ const ClientsListing = () => {
             <GlobalButton
               onClick={() => {
                 setClientInfo({});
+                setIsOpenDrawer(true);
                 setIsOpenDrawer(true);
               }}
               title="Add New"
@@ -492,6 +546,7 @@ const ClientsListing = () => {
               <GlobalButton
                 onClick={() => {
                   setIsOpenDrawer(false);
+                  setIsOpenDrawer(false);
                   setClientInfo({});
                 }}
                 color="error"
@@ -507,6 +562,15 @@ const ClientsListing = () => {
           </Box>
         </FormProvaider>
       </GlobalDrawer>
+
+      <GlobalModal
+        title=""
+        info={modalInfo}
+        okFn={deleteUserHandler}
+        open={isOpenDeleteModal}
+        setOpen={setIsOpenDeleteModal}
+        loading={deleteLoading}
+      />
     </Box>
   );
 };

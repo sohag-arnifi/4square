@@ -80,3 +80,30 @@ export const PATCH = catchAsync(
     });
   }
 );
+
+export const DELETE = catchAsync(
+  async (req: CustomRequest, res: Response): Promise<NextResponse> => {
+    const user = req.user;
+
+    const data = await req.json();
+
+    if (
+      !user?.username &&
+      (user?.role !== IRole.SUPER_ADMIN || user?.role !== IRole.ADMIN)
+    ) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        "You are not permitted to perform this action"
+      );
+    }
+
+    const response = await clientsControllers.deleteOne(data);
+
+    return await sendResponse({
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Clients Delete Successfully",
+      data: response,
+    });
+  }
+);

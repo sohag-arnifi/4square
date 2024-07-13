@@ -14,8 +14,15 @@ const update = async (data: IClient) => {
   return response;
 };
 
+const deleteOne = async (data: IClient) => {
+  const id = data?._id;
+
+  const response = await await Client.findByIdAndDelete(id);
+  return response;
+};
+
 const getAll = async () => {
-  const response = await Client.find().sort({ createdAt: -1 }).lean();
+  const response = await Client.find().sort({ customerId: -1 }).lean();
 
   const filteredData = response?.map((item: IClient) => {
     const expiryDate = new Date(item?.expiryDate).getTime();
@@ -35,6 +42,7 @@ const clientsControllers = {
   create,
   update,
   getAll,
+  deleteOne,
 };
 
 export default clientsControllers;
