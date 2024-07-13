@@ -17,6 +17,7 @@ import {
   styled,
   tableCellClasses,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -50,6 +51,7 @@ interface IProps {
   deleteHandler?: (username: string) => void;
   updateHandler?: (username: string) => void;
   loginUser?: IUser;
+  isNavigate?: boolean;
 }
 const GlobalTable: React.FC<IProps> = ({
   tableHeaders,
@@ -57,9 +59,12 @@ const GlobalTable: React.FC<IProps> = ({
   deleteHandler,
   updateHandler,
   loginUser,
+  isNavigate,
 }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const router = useRouter();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -70,6 +75,12 @@ const GlobalTable: React.FC<IProps> = ({
   ) => {
     setRowsPerPage(parseInt(event.target.value, 5));
     setPage(0);
+  };
+
+  const navigateHandler = (id: string) => {
+    if (isNavigate) {
+      router.push(`clients/${id}`);
+    }
   };
 
   return tableItems?.length > 0 ? (
@@ -115,8 +126,12 @@ const GlobalTable: React.FC<IProps> = ({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               ?.map((item, index) => (
                 <StyledTableRow
+                  onClick={() => navigateHandler(item?._id)}
                   isDeactive={item?.status === "Deactive"}
                   key={index}
+                  sx={{
+                    cursor: "pointer",
+                  }}
                 >
                   {Object.keys(item).map((key, index) => {
                     return (

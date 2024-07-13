@@ -411,6 +411,7 @@ const ClientsListing = () => {
           deleteHandler={openDeleteModal}
           updateHandler={updateHandler}
           loginUser={loginUser}
+          isNavigate
         />
       </Box>
 
