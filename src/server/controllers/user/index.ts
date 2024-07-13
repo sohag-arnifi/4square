@@ -44,7 +44,7 @@ export const login = async (data: { username: string; password: string }) => {
   }
 
   await userControllers.updateOne(
-    { ...user, lastVisit: new Date(Date.now()) },
+    { lastVisit: new Date(Date.now()) },
     user?._id as string
   );
 
