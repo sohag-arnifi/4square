@@ -13,6 +13,9 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import { FormikValues } from "formik";
 import React from "react";
 import PaymentCard from "./_components/PaymentCard";
+import { useCreateClientTransMutation } from "@/redux/features/clientTransaction/clientTransactionApi";
+import { useAppDispatch } from "@/redux/hooks";
+import { snackbarSliceActions } from "@/redux/features/snackBar/snackBarSlice";
 
 export interface IPayment {
   isActivedNeeded: string;
@@ -21,6 +24,11 @@ export interface IPayment {
 
 const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { data, isLoading } = useGetAllClientsQuery({});
+
+  const dispatch = useAppDispatch();
+
+  const [createClientTrans, { isLoading: createLoading }] =
+    useCreateClientTransMutation();
 
   if (isLoading) {
     return <GlobalLoader height="40vh" />;
@@ -51,8 +59,37 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     paymentMethod: "",
   };
 
-  const paymentHandlar = (values: FormikValues) => {
-    console.log("payment", values);
+  const paymentHandlar = async (values: FormikValues) => {
+    try {
+      const response = await createClientTrans({
+        paymentClient: selectedClient?._id,
+        paymentMethod: values.paymentMethod,
+        paymentPackage: selectedClient.servicePackege,
+      }).unwrap();
+
+      if (response?.success) {
+        dispatch(
+          snackbarSliceActions.open({
+            message: response?.message,
+            type: "success",
+          })
+        );
+      } else {
+        dispatch(
+          snackbarSliceActions.open({
+            message: response?.message || "Something went wrong",
+            type: "error",
+          })
+        );
+      }
+    } catch (error) {
+      dispatch(
+        snackbarSliceActions.open({
+          message: "Something went wrong",
+          type: "error",
+        })
+      );
+    }
   };
 
   return (
@@ -281,7 +318,7 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     />
                   </Box>
 
-                  <PaymentCard />
+                  <PaymentCard loading={createLoading} />
                 </FormProvaider>
               </Box>
             </Paper>

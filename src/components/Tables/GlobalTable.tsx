@@ -200,6 +200,11 @@ const GlobalTable: React.FC<IProps> = ({
               color: theme.colorConstants.darkGray,
               textTransform: "capitalize",
             },
+            "& .css-qbnitn": {
+              fontSize: "14px",
+              color: theme.colorConstants.darkGray,
+              textTransform: "capitalize",
+            },
           }}
           size="small"
           rowsPerPageOptions={[5, 10, 20, 50, 100]}

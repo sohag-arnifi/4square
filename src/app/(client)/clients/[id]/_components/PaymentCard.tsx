@@ -6,7 +6,10 @@ import { IPayment } from "../page";
 import { useFormikContext } from "formik";
 import { useAppSelector } from "@/redux/hooks";
 
-const PaymentCard = () => {
+interface IProps {
+  loading: boolean;
+}
+const PaymentCard: React.FC<IProps> = ({ loading }) => {
   const { values } = useFormikContext<IPayment>();
   const loginUser = useAppSelector((state) => state.auth.user);
 
@@ -57,7 +60,7 @@ const PaymentCard = () => {
           </Typography>
 
           <Button
-            //   disabled
+            disabled={loading}
             sx={{
               textTransform: "none",
               px: "30px",
@@ -67,7 +70,7 @@ const PaymentCard = () => {
             variant="contained"
             color="primary"
           >
-            Active
+            {loading ? "Please wait..." : "Active"}
           </Button>
         </Box>
       </Box>
