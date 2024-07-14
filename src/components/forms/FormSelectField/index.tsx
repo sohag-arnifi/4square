@@ -37,7 +37,7 @@ const FormSelectField: React.FC<ISelect> = ({
     <Box
       maxWidth={"500px"}
       display={"flex"}
-      alignItems={"center"}
+      alignItems={{ xs: "center", md: "start" }}
       flexDirection={{ xs: "column", md: inline ?? false ? "row" : "column" }}
     >
       <Typography

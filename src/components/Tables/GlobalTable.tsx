@@ -73,7 +73,7 @@ const GlobalTable: React.FC<IProps> = ({
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 5));
+    setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   };
 
