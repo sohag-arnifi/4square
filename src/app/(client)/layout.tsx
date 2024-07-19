@@ -35,40 +35,40 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       path: "/investor",
       icon: <AssuredWorkload />,
     },
-    {
-      label: "Sales",
-      path: "/",
-      icon: <Business />,
-      subPath: [
-        {
-          label: "Direct Invoice",
-          path: "/sales/direct-invoice",
-        },
-        {
-          label: "Direct Delivery",
-          path: "/sales/direct-delivery",
-        },
-        {
-          label: "Sales Orders",
-          path: "/sales/sales-orders",
-        },
-      ],
-    },
-    {
-      label: "Purchases",
-      path: "/purchases",
-      icon: <Description />,
-      subPath: [
-        {
-          label: "Purchase Orders",
-          path: "/purchases/purchase-orders",
-        },
-        {
-          label: "Purchase Invoices",
-          path: "/purchases/purchase-invoices",
-        },
-      ],
-    },
+    // {
+    //   label: "Sales",
+    //   path: "/",
+    //   icon: <Business />,
+    //   subPath: [
+    //     {
+    //       label: "Direct Invoice",
+    //       path: "/sales/direct-invoice",
+    //     },
+    //     {
+    //       label: "Direct Delivery",
+    //       path: "/sales/direct-delivery",
+    //     },
+    //     {
+    //       label: "Sales Orders",
+    //       path: "/sales/sales-orders",
+    //     },
+    //   ],
+    // },
+    // {
+    //   label: "Purchases",
+    //   path: "/purchases",
+    //   icon: <Description />,
+    //   subPath: [
+    //     {
+    //       label: "Purchase Orders",
+    //       path: "/purchases/purchase-orders",
+    //     },
+    //     {
+    //       label: "Purchase Invoices",
+    //       path: "/purchases/purchase-invoices",
+    //     },
+    //   ],
+    // },
     {
       label: "Settings",
       path: "/settings",
@@ -81,6 +81,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         {
           label: "User Accounts",
           path: "/settings/user-accounts",
+        },
+        {
+          label: "SMS Setup",
+          path: "/settings/sms-setup",
         },
       ],
     },
