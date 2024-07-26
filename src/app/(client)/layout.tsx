@@ -11,6 +11,7 @@ import {
   Description,
   Diversity3,
   Groups2,
+  Message,
   Settings,
 } from "@mui/icons-material";
 import ProtectedRouteHOC from "@/lib/ProtectedRoute";
@@ -34,6 +35,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       label: "All Investors",
       path: "/investor",
       icon: <AssuredWorkload />,
+    },
+    {
+      label: "Messaging",
+      path: "/messaging",
+      icon: <Message />,
     },
     // {
     //   label: "Sales",
