@@ -3,29 +3,24 @@
 import GlobalButton from "@/components/Buttons/GlobalButton";
 import GlobalDrawer from "@/components/Drawers/GlobalDrawer";
 import GlobalLoader from "@/components/GlobalLoader";
-import GlobalModal from "@/components/Modals/GlobalModal";
 import PageHeader from "@/components/PageHeader";
 import GlobalTable from "@/components/Tables/GlobalTable";
 import FormProvaider from "@/components/forms";
-import FormInputField, { IInputType } from "@/components/forms/FormInputField";
-import FormSelectField from "@/components/forms/FormSelectField";
+import FormInputField from "@/components/forms/FormInputField";
 import FormTextAreaField from "@/components/forms/FormTextAreaField";
-import { IClient } from "@/models/client";
+import { IBulkSMS } from "@/models/bulksms";
 import {
-  useCreateClientMutation,
-  useDeleteClientMutation,
-  useGetAllClientsQuery,
-  useUpdateClientMutation,
-} from "@/redux/features/clients/clientApi";
+  useGetAllMessagesQuery,
+  useSendSingleSmsMutation,
+} from "@/redux/features/bulkSms/bulkSmsApi";
+
 import { snackbarSliceActions } from "@/redux/features/snackBar/snackBarSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import theme from "@/theme";
-import { DateRange, ErrorOutline, Search } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import {
   Box,
   InputAdornment,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -79,13 +74,9 @@ const formatDate = (isoString: Date): string => {
 };
 
 const MessagePage = () => {
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
-  const [clientInfo, setClientInfo] = useState<Partial<IClient>>({});
-
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const [openTestContainer, setOpenTestContainer] = useState<boolean>(false);
-
-  const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
-  const [investorInfo, setInvestorInfo] = useState({});
 
   const [startDate, setStartDate] = useState<Date>(() => {
     const date = new Date();
@@ -100,148 +91,98 @@ const MessagePage = () => {
     return date;
   });
 
-  console.log(startDate);
-
-  const [renderClientsStatus, setRenderClientsStatus] = useState<string>("all");
   const [search, setSearch] = useState<string>("");
 
   const loginUser = useAppSelector((state) => state?.auth?.user);
 
-  const { data, isLoading: initialLoading } = useGetAllClientsQuery({});
+  const [sendSingleSms, { isLoading: isSingleSmsLoading }] =
+    useSendSingleSmsMutation();
 
-  const updateHandler = (id: string) => {
-    const selected = data?.data?.find((item: IClient) => item?._id === id);
-    setClientInfo(selected);
-    setIsOpenDrawer(true);
-  };
-
-  const openDeleteModal = (id: string) => {
-    const selected = data?.data?.find((item: IClient) => item?._id === id);
-    setClientInfo(selected);
-    setIsOpenDeleteModal(true);
-  };
+  const { data, isLoading: initialLoading } = useGetAllMessagesQuery({});
 
   if (initialLoading) {
     return <GlobalLoader height="40vh" />;
   }
 
-  const filteredData = data?.data?.filter((item: IClient) => {
-    if (renderClientsStatus === "all") {
-      return true;
-    } else if (renderClientsStatus === "active") {
-      return item?.isActive;
-    } else if (renderClientsStatus === "deactive") {
-      return !item?.isActive;
-    } else {
-      return false;
-    }
+  const filteredData = data?.data?.filter((item: IBulkSMS) => {
+    const createdAt = new Date(item.createdAt);
+    return createdAt >= startDate && createdAt <= endDate;
   });
 
-  const searchAbleData: IClient[] = filteredData?.filter((item: IClient) => {
+  const searchAbleData: IBulkSMS[] = filteredData?.filter((item: IBulkSMS) => {
     const searchInLowerCase = search.toLocaleLowerCase();
 
-    const { name, address, phone, customerId, loginId, servicePackege } = item;
-
-    return (
-      name?.toLocaleLowerCase().includes(searchInLowerCase) ||
-      address?.toLocaleLowerCase().includes(searchInLowerCase) ||
-      phone?.toLocaleLowerCase().includes(searchInLowerCase) ||
-      customerId?.toLocaleLowerCase().includes(searchInLowerCase) ||
-      loginId?.toLocaleLowerCase().includes(searchInLowerCase) ||
-      servicePackege?.toLocaleLowerCase().includes(searchInLowerCase)
-    );
+    const { sendNumber } = item;
+    return sendNumber?.toLocaleLowerCase().includes(searchInLowerCase);
   });
 
   const tableHeaders = [
     {
-      label: "Client Name",
-      align: "left",
-      width: "150px",
-    },
-    {
-      label: "Phone Number",
-      align: "left",
-      width: "150px",
-    },
-    {
-      label: "Address",
-      align: "left",
-      width: "150px",
-    },
-    {
-      label: "ID Number",
+      label: "SendBy",
       align: "left",
       width: "100px",
     },
     {
-      label: "Package",
+      label: "Phone",
       align: "left",
       width: "100px",
     },
     {
-      label: "Expiry Date",
+      label: "Count",
+      align: "left",
+      width: "100px",
+    },
+    {
+      label: "Send Date",
       align: "left",
       width: "180px",
     },
     {
-      label: "Status",
+      label: "Message",
       align: "left",
-      width: "100px",
-    },
-    {
-      label: "Actions",
-      align: "center",
-      width: "100px",
+      width: "100%",
     },
   ];
 
-  const tableItems = searchAbleData?.map((item: IClient) => {
+  const tableItems = searchAbleData?.map((item: IBulkSMS) => {
     return {
-      _id: item._id?.toString(),
-      name: item.name,
-      phone: item.phone,
-      address: item.address,
-      idNumber: item.customerId,
-      servicePackege: item.servicePackege,
-      expiryDate: formatDate(item?.expiryDate),
-      status: item.isActive ? "Active" : "Deactive",
+      _id: item._id?.toString() as string,
+      sendBy: item?.sendBy as string,
+      phone: item?.sendNumber as string,
+      count: item?.smsCount?.toString() as string,
+      date: formatDate(item?.createdAt),
+      message: item?.message,
     };
   });
 
   const submitHandler = async (values: FormikValues) => {
-    let response;
-
-    console.log(values);
-    // try {
-    //   if (!values?._id) {
-    //     response = await createInvestor(values).unwrap();
-    //   } else {
-    //     response = await updateInvestor(values).unwrap();
-    //   }
-
-    //   if (response?.success) {
-    //     dispatch(
-    //       snackbarSliceActions.open({
-    //         message: response?.message,
-    //         type: "success",
-    //       })
-    //     );
-    //   } else {
-    //     dispatch(
-    //       snackbarSliceActions.open({
-    //         message: response?.message || "Something went wrong",
-    //         type: "error",
-    //       })
-    //     );
-    //   }
-    // } catch (error) {
-    //   dispatch(
-    //     snackbarSliceActions.open({
-    //       message: response?.message || "Something went wrong",
-    //       type: "error",
-    //     })
-    //   );
-    // }
+    try {
+      const response = await sendSingleSms(values)?.unwrap();
+      if (response?.success) {
+        setOpenTestContainer(false);
+        dispatch(
+          snackbarSliceActions.open({
+            message: response?.message,
+            type: "success",
+          })
+        );
+      } else {
+        dispatch(
+          snackbarSliceActions.open({
+            message: response?.message || "Something went wrong",
+            type: "error",
+          })
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        snackbarSliceActions.open({
+          message: "Something went wrong",
+          type: "error",
+        })
+      );
+    }
   };
 
   return (
@@ -307,10 +248,7 @@ const MessagePage = () => {
         <GlobalTable
           tableHeaders={tableHeaders}
           tableItems={tableItems}
-          deleteHandler={openDeleteModal}
-          updateHandler={updateHandler}
           loginUser={loginUser}
-          isNavigate
         />
       </Box>
 
@@ -318,20 +256,20 @@ const MessagePage = () => {
         <Box marginY="50px">
           <Stack direction="row" spacing={2} justifyContent={"center"}>
             <GlobalButton
-              // onClick={() => router.back()}
+              onClick={() => router.back()}
               color="error"
               title="Send Bulk SMS"
             />
             <GlobalButton
               onClick={() => setOpenTestContainer(true)}
-              title="Send Test SMS"
+              title="Send SMS"
             />
           </Stack>
         </Box>
       </Box>
 
       <GlobalDrawer
-        title={"Send Test SMS"}
+        title={"Send SMS"}
         open={openTestContainer}
         setOpen={setOpenTestContainer}
       >
@@ -356,17 +294,10 @@ const MessagePage = () => {
 
           <Box marginTop="50px">
             <Stack direction="row" spacing={2} justifyContent={"center"}>
-              <GlobalButton
-                // onClick={() => {
-                //   setIsOpenDrawer(false);
-                //   setInvestorInfo({});
-                // }}
-                color="error"
-                title="Cancel"
-              />
+              <GlobalButton color="error" title="Cancel" />
 
               <GlobalButton
-                // isLoading={createLoading || updateLoading}
+                isLoading={isSingleSmsLoading}
                 title={"Send"}
                 type="submit"
               />

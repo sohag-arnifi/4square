@@ -1,10 +1,9 @@
-import { IBulkSMS } from "@/models/bulksms";
+import BulkSMS, { IBulkSMS } from "@/models/bulksms";
 import Investor, { IInvestor } from "@/models/investor";
 
 const sendSingle = async (data: IBulkSMS) => {
-  console.log("send single sms");
-  // const response = await Investor.create(data);
-  // return response;
+  const response = await BulkSMS.create(data);
+  return response;
 };
 
 const update = async (data: IInvestor) => {
@@ -17,15 +16,17 @@ const update = async (data: IInvestor) => {
 };
 
 const getAll = async () => {
-  const response = await Investor.find();
+  const response = await BulkSMS.find()
+    .populate("sendBy")
+    .sort({ createdAt: -1 });
 
   return response;
 };
 
 const bulksmsControllers = {
   sendSingle,
-  update,
   getAll,
+  update,
 };
 
 export default bulksmsControllers;

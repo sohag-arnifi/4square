@@ -25,7 +25,7 @@ export const POST = catchAsync(
 
     const response = await bulksmsControllers.sendSingle({
       ...data,
-      sendBy: user?._id,
+      sendBy: user?.username,
     });
 
     return await sendResponse({
@@ -48,12 +48,12 @@ export const GET = catchAsync(
       );
     }
 
-    const response = await investorControllers.getAll();
+    const response = await bulksmsControllers.getAll();
 
     return await sendResponse({
       statusCode: httpStatus.OK,
       success: true,
-      message: "Investors Get Successfully",
+      message: "Messages get Successfully",
       data: response,
     });
   }

@@ -9,6 +9,6 @@ export const baseApiSlice = createApi({
     //   return headers;
     // },
   }),
-  tagTypes: ["user", "fiscalYear", "clients"],
+  tagTypes: ["user", "fiscalYear", "clients", "bulksms"],
   endpoints: () => ({}),
 });

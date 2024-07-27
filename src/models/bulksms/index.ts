@@ -4,11 +4,12 @@ import { IClient } from "../client";
 import { IUser } from "../user";
 
 export interface IBulkSMS extends Document {
-  sendTo: string | ObjectId | IClient;
+  sendTo: string | ObjectId | IClient | null;
   sendNumber: string;
   message: string;
-  sendBy: string | ObjectId | IUser;
+  sendBy: string;
   smsCount: number;
+  createdAt: Date;
 }
 
 const bulkSmsSchema: Schema<IBulkSMS> = new Schema<IBulkSMS>(
@@ -16,7 +17,7 @@ const bulkSmsSchema: Schema<IBulkSMS> = new Schema<IBulkSMS>(
     sendTo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Client",
-      required: true,
+      default: null,
     },
     sendNumber: {
       type: String,
@@ -29,7 +30,9 @@ const bulkSmsSchema: Schema<IBulkSMS> = new Schema<IBulkSMS>(
       trim: true,
     },
     sendBy: {
-      type: mongoose.Schema.Types.ObjectId,
+      // type: mongoose.Schema.Types.ObjectId,
+      type: String,
+      // ref: "User",
       required: true,
     },
 
@@ -43,7 +46,7 @@ const bulkSmsSchema: Schema<IBulkSMS> = new Schema<IBulkSMS>(
   }
 );
 
-const BulsSMS: Model<IBulkSMS> =
+const BulkSMS: Model<IBulkSMS> =
   mongoose.models.Message || model<IBulkSMS>("Message", bulkSmsSchema);
 
-export default BulsSMS;
+export default BulkSMS;
