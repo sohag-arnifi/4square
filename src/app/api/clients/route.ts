@@ -21,7 +21,10 @@ export const POST = catchAsync(
       );
     }
 
-    const response = await clientsControllers.create(data);
+    const response = await clientsControllers.create(
+      data,
+      user?.username as string
+    );
 
     return await sendResponse({
       statusCode: httpStatus.OK,

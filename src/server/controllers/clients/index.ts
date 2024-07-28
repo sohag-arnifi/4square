@@ -1,7 +1,19 @@
 import Client, { IClient } from "@/models/client";
+import { getCreateMessageTemplate } from "@/server/smsTemplates";
+import bulksmsControllers from "../bulksms";
+import { IBulkSMS } from "@/models/bulksms";
 
-const create = async (data: IClient) => {
+const create = async (data: IClient, createdBy: string) => {
+  const message = getCreateMessageTemplate(data);
+  const smsData = {
+    sendBy: createdBy,
+    sendNumber: data?.phone,
+    message: message,
+    smsCount: 2,
+  };
+
   const response = await (await Client.create(data))?.toObject();
+  await bulksmsControllers.sendSingle(smsData as IBulkSMS);
   return response;
 };
 

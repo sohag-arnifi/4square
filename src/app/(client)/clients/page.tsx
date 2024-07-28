@@ -32,6 +32,13 @@ import {
 import { FormikValues } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import * as Yup from "yup";
+
+const validateSchema = Yup.object().shape({
+  phone: Yup.string()
+    .required("Phone Number is Required")
+    .matches(/^\d{11}$/, "Phone Number must be exactly 11 digits"),
+});
 
 const formatDate = (isoString: Date): string => {
   const date = new Date(isoString);
@@ -446,7 +453,11 @@ const ClientsListing = () => {
         open={isOpenDrawer}
         setOpen={setIsOpenDrawer}
       >
-        <FormProvaider submitHandlar={submitHandler} initialValues={clientInfo}>
+        <FormProvaider
+          submitHandlar={submitHandler}
+          initialValues={clientInfo}
+          validationSchema={validateSchema}
+        >
           <Box marginTop={{ xs: "30px", md: "0px" }}>
             <FormInputField
               name="name"
