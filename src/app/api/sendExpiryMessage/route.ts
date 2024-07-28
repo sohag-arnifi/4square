@@ -1,25 +1,26 @@
+import dbConnection from "@/lib/dbConnect";
 import { IBulkSMS } from "@/models/bulksms";
 import bulksmsControllers from "@/server/controllers/bulksms";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const data = {
-    sendTo: null,
-    sendBy: "corn_job",
-    sendNumber: "01760567555",
-    message: `corn job run at ${new Date().toLocaleString()}`,
-    smsCount: 1,
-  };
+export const GET = async () => {
   try {
-    const response = await bulksmsControllers.sendSingle(data as IBulkSMS);
+    await dbConnection();
+    const data = {
+      sendBy: "auto",
+      sendNumber: "01760567555",
+      message: `corn job run at ${new Date().toLocaleString()}`,
+      smsCount: 1,
+    };
+
+    await bulksmsControllers.sendSingle(data as IBulkSMS);
+
     console.log(
       `corn jobs working successfully, at: ${new Date().toLocaleString()}`
     );
 
-    console.log(response);
-
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ message: "sms send successfully" });
   } catch (error) {
     console.log(error, "Error");
   }
-}
+};

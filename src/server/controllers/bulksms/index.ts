@@ -4,7 +4,7 @@ import { sendOneToManySMS } from "@/server/helpers/smsApi";
 import httpStatus from "http-status";
 
 const sendSingle = async (data: IBulkSMS) => {
-  const { sendNumber, message } = data;
+  const { sendBy, sendNumber, message } = data;
 
   const smsResponse = await sendOneToManySMS(sendNumber, message);
 
@@ -15,8 +15,8 @@ const sendSingle = async (data: IBulkSMS) => {
     );
   }
 
-  const response = await BulkSMS.create(data);
-  return response;
+  // const response = await BulkSMS.create(data);
+  // return response;
 };
 
 const getAll = async ({
