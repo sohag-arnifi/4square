@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/sendExpiryMessage",
-      "schedule": "*/20 * * * *"
+      "schedule": "* 5 * * *"
     }
   ]
 }
