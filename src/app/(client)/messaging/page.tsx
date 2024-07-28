@@ -6,7 +6,7 @@ import GlobalLoader from "@/components/GlobalLoader";
 import PageHeader from "@/components/PageHeader";
 import GlobalTable from "@/components/Tables/GlobalTable";
 import FormProvaider from "@/components/forms";
-import FormInputField from "@/components/forms/FormInputField";
+import FormInputField, { IInputType } from "@/components/forms/FormInputField";
 import FormTextAreaField from "@/components/forms/FormTextAreaField";
 import { IBulkSMS } from "@/models/bulksms";
 import {
@@ -31,6 +31,16 @@ import dayjs from "dayjs";
 import { FormikValues } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import * as Yup from "yup";
+
+const validateSchema = Yup.object().shape({
+  sendNumber: Yup.string()
+    .required("Phone Number is Required")
+    .matches(/^\d{11}$/, "Phone Number must be exactly 11 digits"),
+  message: Yup.string().required("Message is Required"),
+  // .min(2, "Message must be at least 2 characters")
+  // .max(160, "Message must be at most 160 characters"),
+});
 
 interface IDateProps {
   value: Date;
@@ -98,18 +108,16 @@ const MessagePage = () => {
   const [sendSingleSms, { isLoading: isSingleSmsLoading }] =
     useSendSingleSmsMutation();
 
-  const { data, isLoading: initialLoading } = useGetAllMessagesQuery({});
+  const { data, isLoading: initialLoading } = useGetAllMessagesQuery({
+    startDate,
+    endDate,
+  });
 
   if (initialLoading) {
     return <GlobalLoader height="40vh" />;
   }
 
-  const filteredData = data?.data?.filter((item: IBulkSMS) => {
-    const createdAt = new Date(item.createdAt);
-    return createdAt >= startDate && createdAt <= endDate;
-  });
-
-  const searchAbleData: IBulkSMS[] = filteredData?.filter((item: IBulkSMS) => {
+  const searchAbleData: IBulkSMS[] = data?.data?.filter((item: IBulkSMS) => {
     const searchInLowerCase = search.toLocaleLowerCase();
 
     const { sendNumber } = item;
@@ -129,20 +137,27 @@ const MessagePage = () => {
     },
     {
       label: "Count",
-      align: "left",
-      width: "100px",
+      align: "center",
+      width: "50px",
     },
     {
       label: "Send Date",
       align: "left",
-      width: "180px",
+      width: "150px",
     },
     {
       label: "Message",
       align: "left",
-      width: "100%",
+      width: "700px",
     },
   ];
+
+  const totalMessageCost = searchAbleData?.reduce(
+    (count: number, item: IBulkSMS) => {
+      return count + (item.smsCount || 0);
+    },
+    0
+  );
 
   const tableItems = searchAbleData?.map((item: IBulkSMS) => {
     return {
@@ -157,7 +172,10 @@ const MessagePage = () => {
 
   const submitHandler = async (values: FormikValues) => {
     try {
-      const response = await sendSingleSms(values)?.unwrap();
+      const response = await sendSingleSms({
+        ...values,
+        smsCount: Math.ceil(values.message.length / 160),
+      })?.unwrap();
       if (response?.success) {
         setOpenTestContainer(false);
         dispatch(
@@ -190,6 +208,25 @@ const MessagePage = () => {
       <PageHeader title="Messages" />
 
       <Box sx={{ paddingX: "5%", mx: "auto", my: "20px", minHeight: "40vh" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+          }}
+        >
+          <Typography>
+            Messages Cost:{" "}
+            <span
+              style={{
+                color: theme?.colorConstants?.crossRed,
+                fontWeight: "bold",
+              }}
+            >
+              {totalMessageCost} Only
+            </span>
+          </Typography>
+        </Box>
+
         <Box
           sx={{
             paddingY: "10px",
@@ -273,12 +310,17 @@ const MessagePage = () => {
         open={openTestContainer}
         setOpen={setOpenTestContainer}
       >
-        <FormProvaider submitHandlar={submitHandler} initialValues={{}}>
+        <FormProvaider
+          submitHandlar={submitHandler}
+          initialValues={{ sendNumber: "", message: "" }}
+          validationSchema={validateSchema}
+        >
           <Box marginTop={{ xs: "30px", md: "0px" }}>
             <FormInputField
               name="sendNumber"
               label="Phone Number"
               required
+              // type={IInputType.NUMBER}
               placeholder="Enter a phone number"
             />
           </Box>
@@ -294,7 +336,13 @@ const MessagePage = () => {
 
           <Box marginTop="50px">
             <Stack direction="row" spacing={2} justifyContent={"center"}>
-              <GlobalButton color="error" title="Cancel" />
+              <GlobalButton
+                onClick={() => {
+                  setOpenTestContainer(false);
+                }}
+                color="error"
+                title="Cancel"
+              />
 
               <GlobalButton
                 isLoading={isSingleSmsLoading}

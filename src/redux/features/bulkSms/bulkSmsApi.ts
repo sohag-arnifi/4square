@@ -3,9 +3,10 @@ import { baseApiSlice } from "../baseApi/baseApiSlice";
 const bulkSmsApi = baseApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllMessages: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: "/bulksms",
         method: "GET",
+        params,
       }),
       providesTags: ["bulksms"],
     }),

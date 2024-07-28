@@ -6,6 +6,9 @@ const envConfig = {
   expires_in: process.env.EXPIRES_IN,
   refreshToken_expires: process.env.REFRESHTOKEN_EXPIRES,
   db_uri: process.env.DB_URI,
+  sms_url: process.env.SMS_URL,
+  sms_api_key: process.env.SMS_API_KEY,
+  sms_sender_id: process.env.SMS_SENDER_ID,
 };
 
 export default envConfig;

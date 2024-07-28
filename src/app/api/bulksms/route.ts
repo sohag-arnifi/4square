@@ -1,7 +1,6 @@
 import { IRole } from "@/models/user";
 import ApiError from "@/server/ErrorHandelars/ApiError";
 import bulksmsControllers from "@/server/controllers/bulksms";
-import investorControllers from "@/server/controllers/investor";
 import catchAsync, { CustomRequest } from "@/server/helpers/catchAsync";
 import sendResponse from "@/server/helpers/sendResponse";
 import httpStatus from "http-status";
@@ -48,7 +47,16 @@ export const GET = catchAsync(
       );
     }
 
-    const response = await bulksmsControllers.getAll();
+    const paramsUrl = new URL(req.url);
+    const params = Object.fromEntries(paramsUrl.searchParams.entries());
+
+    const startDate = new Date(params.startDate)?.toDateString();
+    const endDate = new Date(params.endDate)?.toDateString();
+
+    const response = await bulksmsControllers.getAll({
+      startDate: startDate,
+      endDate: endDate,
+    });
 
     return await sendResponse({
       statusCode: httpStatus.OK,
@@ -59,26 +67,26 @@ export const GET = catchAsync(
   }
 );
 
-export const PATCH = catchAsync(
-  async (req: CustomRequest, res: Response): Promise<NextResponse> => {
-    const user = req.user;
+// export const PATCH = catchAsync(
+//   async (req: CustomRequest, res: Response): Promise<NextResponse> => {
+//     const user = req.user;
 
-    const data = await req.json();
+//     const data = await req.json();
 
-    if (!user?.id) {
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "You are not permitted to perform this action"
-      );
-    }
+//     if (!user?.id) {
+//       throw new ApiError(
+//         httpStatus.UNAUTHORIZED,
+//         "You are not permitted to perform this action"
+//       );
+//     }
 
-    const response = await investorControllers.update(data);
+//     const response = await investorControllers.update(data);
 
-    return await sendResponse({
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Investor Update Successfully",
-      data: response,
-    });
-  }
-);
+//     return await sendResponse({
+//       statusCode: httpStatus.OK,
+//       success: true,
+//       message: "Investor Update Successfully",
+//       data: response,
+//     });
+//   }
+// );

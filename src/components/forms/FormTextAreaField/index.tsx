@@ -1,4 +1,11 @@
-import { Box, InputAdornment, TextField, Typography } from "@mui/material";
+import theme from "@/theme";
+import {
+  Box,
+  FormHelperText,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Field, FieldProps } from "formik";
 import React from "react";
 
@@ -48,23 +55,52 @@ const FormTextAreaField: React.FC<IInput> = ({
 
       <Field name={name} type={type}>
         {({ field, meta }: FieldProps) => (
-          <textarea
-            {...field}
-            rows={3}
-            style={{
-              width: "100%",
-              // border: "none",
-              padding: "20px",
-              outline: "none",
-              // fontFamily: fontFamily.switzer,
-              // fontFamily: fontFamily.inter,
-              fontSize: "16px",
-              fontWeight: 500,
-            }}
-            required={required}
-            placeholder={placeholder}
-            // onChange={(e) => setUserComment(e.target.value)}
-          ></textarea>
+          <>
+            <textarea
+              {...field}
+              rows={3}
+              style={{
+                width: "100%",
+                padding: "10px",
+                outline: "none",
+                fontSize: "16px",
+                fontWeight: 500,
+              }}
+              required={required}
+              placeholder={placeholder}
+            ></textarea>
+
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "10px",
+                }}
+              >
+                Message Length: {field?.value?.length}
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontSize: "10px",
+                  marginLeft: "5px",
+                }}
+              >
+                SMS Cost: {Math.ceil(field?.value?.length / 160)}
+              </Typography>
+            </Box>
+            <FormHelperText
+              sx={{
+                color: theme.colorConstants.crossRed,
+                marginLeft: "16px",
+              }}
+            >
+              {meta.touched && meta.error}
+            </FormHelperText>
+          </>
         )}
       </Field>
     </Box>
