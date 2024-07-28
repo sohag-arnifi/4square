@@ -1,6 +1,9 @@
 import Client, { IClient } from "@/models/client";
 import ClientTransaction, { IClientTrans } from "@/models/clientTrans";
+import { getPaymentMessageTemplate } from "@/server/smsTemplates";
 import mongoose from "mongoose";
+import bulksmsControllers from "../bulksms";
+import { IBulkSMS } from "@/models/bulksms";
 
 const create = async (data: IClientTrans) => {
   const session = await mongoose.startSession();
@@ -9,8 +12,6 @@ const create = async (data: IClientTrans) => {
   const clientTransaction = new ClientTransaction(data);
   const savedTransaction = await clientTransaction.save({ session });
 
-  // const sevenDaysFromToday = new Date();
-  // sevenDaysFromToday.setDate(sevenDaysFromToday.getDate() + 7);
   const oneMonthFromToday = new Date();
   oneMonthFromToday.setMonth(oneMonthFromToday.getMonth() + 1);
 
@@ -20,10 +21,24 @@ const create = async (data: IClientTrans) => {
     expiryDate: oneMonthFromToday,
   };
 
-  await Client.findByIdAndUpdate(clientId, update, { session });
+  const clientResponse = await Client.findByIdAndUpdate(clientId, update, {
+    session,
+    new: true,
+  }).exec();
 
   await session.commitTransaction();
   session.endSession();
+
+  const template = getPaymentMessageTemplate(data, oneMonthFromToday);
+
+  const smsData = {
+    sendBy: data?.paymentBy,
+    sendNumber: clientResponse?.phone,
+    message: template,
+    smsCount: 1,
+  };
+
+  await bulksmsControllers.sendSingle(smsData as IBulkSMS);
 
   return savedTransaction.toObject();
 };

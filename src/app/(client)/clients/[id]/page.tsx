@@ -40,6 +40,9 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   const clientDetailsInfo = {
     "Active Packege": selectedClient?.servicePackege,
+    "Packege Charge ": selectedClient?.serviceCharge
+      ? `${selectedClient?.serviceCharge}Tk`
+      : "",
     "Client ID": selectedClient?.customerId,
     "Login ID": selectedClient?.loginId,
     "Login Password": selectedClient?.loginPassword,
@@ -65,6 +68,7 @@ const ClientDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
         paymentClient: selectedClient?._id,
         paymentMethod: values.paymentMethod,
         paymentPackage: selectedClient.servicePackege,
+        paymentAmount: selectedClient?.serviceCharge,
       }).unwrap();
 
       if (response?.success) {

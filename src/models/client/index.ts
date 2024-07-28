@@ -11,6 +11,7 @@ export interface IClient extends Document {
   loginId: string;
   loginPassword: string;
   servicePackege: string;
+  serviceCharge: number;
   expiryDate: Date;
   mac: string;
   isActive: boolean;
@@ -59,6 +60,11 @@ const clientSchema: Schema<IClient> = new Schema<IClient>(
       type: String,
       required: true,
       trim: true,
+    },
+    serviceCharge: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     expiryDate: {
       type: Date,

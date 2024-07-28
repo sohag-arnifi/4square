@@ -9,7 +9,7 @@ export interface IClientTrans extends Document {
   paymentPackage: string;
   paymentAmount: number;
   paymentDate: Date;
-  paymentBy: string | ObjectId | IClient;
+  paymentBy: string;
 }
 
 const clientTransSchema: Schema<IClientTrans> = new Schema<IClientTrans>(
@@ -39,7 +39,7 @@ const clientTransSchema: Schema<IClientTrans> = new Schema<IClientTrans>(
       default: new Date(Date.now()),
     },
     paymentBy: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       required: true,
     },
   },

@@ -195,22 +195,27 @@ const ClientsListing = () => {
     {
       label: "Address",
       align: "left",
-      width: "150px",
+      width: "200px",
     },
     {
       label: "ID Number",
       align: "left",
-      width: "100px",
+      width: "120px",
     },
     {
       label: "Package",
       align: "left",
-      width: "100px",
+      width: "50px",
+    },
+    {
+      label: "Charge",
+      align: "left",
+      width: "50px",
     },
     {
       label: "Expiry Date",
       align: "left",
-      width: "180px",
+      width: "150px",
     },
     {
       label: "Status",
@@ -232,6 +237,7 @@ const ClientsListing = () => {
       address: item.address,
       idNumber: item.customerId,
       servicePackege: item.servicePackege,
+      serviceCharge: item?.serviceCharge ? `${item?.serviceCharge}Tk` : "",
       expiryDate: formatDate(item?.expiryDate),
       status: item.isActive ? "Active" : "Deactive",
     };
@@ -517,6 +523,16 @@ const ClientsListing = () => {
                 { label: "40Mbps", value: "40Mbps" },
               ]}
               placeholder="Select One"
+              required
+            />
+          </Box>
+
+          <Box marginTop={"16px"}>
+            <FormInputField
+              name="serviceCharge"
+              label="Charge (Amount)"
+              type={IInputType.NUMBER}
+              placeholder="Enter your service charge"
               required
             />
           </Box>

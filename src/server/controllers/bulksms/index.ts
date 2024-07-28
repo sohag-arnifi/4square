@@ -15,8 +15,8 @@ const sendSingle = async (data: IBulkSMS) => {
     );
   }
 
-  // const response = await BulkSMS.create(data);
-  // return response;
+  const response = await BulkSMS.create(data);
+  return response;
 };
 
 const getAll = async ({
