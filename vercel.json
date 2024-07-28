@@ -1,16 +1,6 @@
 {
-  "functions": {
-    "api/sendExpiryMessage": {
-      "memory": 128,
-      "maxDuration": 60
-    }
-  },
   "cron": {
-    "jobs": [
-      {
-        "path": "/api/sendExpiryMessage",
-        "schedule": "*/2 * * * *"
-      }
-    ]
+    "path": "/api/sendExpiryMessage",
+    "schedule": "*/2 * * * *"
   }
 }
