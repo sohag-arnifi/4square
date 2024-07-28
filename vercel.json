@@ -1,6 +1,6 @@
 {
   "cron": {
     "path": "/api/sendExpiryMessage",
-    "schedule": "*/2 * * * *"
+    "schedule": "* * * * *"
   }
 }
