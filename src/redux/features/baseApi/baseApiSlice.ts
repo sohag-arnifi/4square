@@ -4,10 +4,6 @@ export const baseApiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api",
-    // prepareHeaders: (headers) => {
-    //   headers.set("Content-Type", "application/json");
-    //   return headers;
-    // },
   }),
   tagTypes: ["user", "fiscalYear", "clients", "bulksms"],
   endpoints: () => ({}),
